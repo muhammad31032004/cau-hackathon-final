@@ -31,7 +31,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Google Drive file IDs
 CLASSIFICATION_GDRIVE_ID = "1yc_j-5BlQPE40slVqZZYmPTebxQtn5Wh"
-SEGMENTATION_GDRIVE_ID = "1G4IA_a6X1Iwsb14B7S8caU6wnmNIDd__"
+SEGMENTATION_GDRIVE_ID = "1F9GRpXlpUKISoJjnCZhu8HyJNW6mKEnH"
 
 # Local paths
 MODEL_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved_models")
