@@ -172,13 +172,23 @@ def load_segmentation_model():
 
     checkpoint = torch.load(SEGMENTATION_MODEL_PATH, map_location=DEVICE, weights_only=False)
 
-    # Handle both formats
+    # Extract state dict from various checkpoint formats
     if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
-        model.load_state_dict(checkpoint["model_state_dict"])
+        state_dict = checkpoint["model_state_dict"]
     elif isinstance(checkpoint, dict) and "state_dict" in checkpoint:
-        model.load_state_dict(checkpoint["state_dict"])
+        state_dict = checkpoint["state_dict"]
+    elif isinstance(checkpoint, dict) and any(k.startswith("encoder") or k.startswith("decoder") for k in checkpoint.keys()):
+        state_dict = checkpoint
     else:
-        model.load_state_dict(checkpoint)
+        state_dict = checkpoint
+
+    # Remove 'model.' prefix if present
+    cleaned = {}
+    for k, v in state_dict.items():
+        new_key = k.replace("model.", "", 1) if k.startswith("model.") else k
+        cleaned[new_key] = v
+
+    model.load_state_dict(cleaned, strict=False)
 
     model.to(DEVICE)
     model.eval()
